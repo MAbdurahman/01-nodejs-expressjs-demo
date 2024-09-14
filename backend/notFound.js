@@ -51,7 +51,7 @@ export default function NotFound() {
         }
         
         html:before {
-            content: 'Page Not Found';
+            content: 'Course Not Found';
             font-size: 22px;
             font-weight: 400;
             bottom: 330px;
