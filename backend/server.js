@@ -4,6 +4,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import colors from 'colors';
 
+import Template from "./template.js";
+
 //**************** configuration setup ****************//
 dotenv.config({path: 'backend/config/config.env'});
 colors.enable();
@@ -20,4 +22,9 @@ app.use(express.json());
 //**************** app listening ****************//
 const server = app.listen(PORT, () => {
    console.log(`The server is listening at - http://127.0.0.1:${PORT}${API_URL} in ${NODE_ENV} mode🔥`.yellow);
+});
+
+//**************** routes****************//
+app.get('/api/v1.0/', (req, res) => {
+   res.send(Template());
 });
