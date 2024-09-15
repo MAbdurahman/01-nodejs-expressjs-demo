@@ -1,4 +1,4 @@
-//**************** imports ****************//
+/************************* imports *************************/
 import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
@@ -8,11 +8,11 @@ import Joi from 'joi';
 import Template from "./template.js";
 import NotFound from './notFound.js';
 
-//**************** configuration setup ****************//
+/************************* configuration setup *************************/
 dotenv.config({path: 'backend/config/config.env'});
 colors.enable();
 
-//**************** data resources ****************//
+/************************* data resources *************************/
 const courses = [
    {id:100, name: 'Master JavaScript'},
    {id:200, name: 'Master JavaScript Algorithms'},
@@ -21,22 +21,22 @@ const courses = [
    {id:500, name: 'Master ExpressJS'},
 ]
 
-//**************** variables ****************//
+/************************* variables *************************/
 const app = express();
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'DEVELOPMENT';
 const API_URL = process.env.API_ENV || "/api/v1.0/";
 
-//**************** middlewares ****************//
+/************************* middlewares *************************/
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
-//**************** app listening ****************//
+/************************* app listening *************************/
 const server = app.listen(PORT, () => {
    console.log(`The server is listening at - http://127.0.0.1:${PORT}${API_URL} in ${NODE_ENV} mode🔥`.yellow);
 });
 
-//**************** routes****************//
+/************************* routes *************************/
 app.get('/api/v1.0/', (req, res) => {
    res.send(Template());
 });
@@ -124,8 +124,7 @@ app.delete('/api/v1.0/courses/:id', (req, res) => {
    }
 });
 
-
-//**************** helper functions ****************//
+/************************* functions *************************/
 function validateCourse(course) {
    const schema = Joi.object().keys({
       name: Joi.string().min(3).required()
