@@ -1,4 +1,5 @@
 export default function NotFound() {
+   // HTML
    return `<!doctype html>
 <html lang="en">
 <head>

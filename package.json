@@ -8,7 +8,7 @@
   "author": "Mahdi Abdurrahman <mdbdrrhm@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node backend/server.js",
+    "start": "node backend/server",
     "server": "SET NODE_ENV=DEVELOPMENT& nodemon backend/server"
   },
   "dependencies": {

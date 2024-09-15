@@ -1,5 +1,5 @@
 /************************* imports *************************/
-import path from 'path';
+import path from 'node:path';
 import express from 'express';
 import dotenv from 'dotenv';
 import colors from 'colors';
@@ -7,6 +7,8 @@ import Joi from 'joi';
 
 import Template from "./template.js";
 import NotFound from './notFound.js';
+import {loggerMiddleware} from './middlewares/loggerMiddleware.js';
+import {authenticateMiddleware} from './middlewares/authenticateMiddleware.js';
 
 /************************* configuration setup *************************/
 dotenv.config({path: 'backend/config/config.env'});
@@ -28,8 +30,9 @@ const NODE_ENV = process.env.NODE_ENV || 'DEVELOPMENT';
 const API_URL = process.env.API_ENV || "/api/v1.0/";
 
 /************************* middlewares *************************/
-app.use(express.json()) // for parsing application/json
-app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(express.static('public'));
 
 /************************* app listening *************************/
 const server = app.listen(PORT, () => {
@@ -46,13 +49,13 @@ app.get('/api/v1.0/courses/', (req, res) => {
 });
 
 app.get('/api/v1.0/courses/:id', (req, res) => {
-   let found = courses.find((course) => course.id === parseInt(req.params.id));
+   let foundCourse = courses.find((course) => course.id === parseInt(req.params.id));
 
-   if (!found) {
+   if (!foundCourse) {
       res.status(404).send(NotFound());
 
    } else {
-      res.status(200).json(found);
+      res.status(200).json(foundCourse);
    }
 });
 
@@ -66,21 +69,21 @@ app.post('/api/v1.0/courses', (req, res) => {
    let tempCourses = courses.map((course) => course.id);
    let newId = tempCourses.length > 0 ? Math.max.apply(Math, tempCourses) + 100 : 100;
 
-   let newItem = {
+   let newCourse = {
       id: newId,
       name: req.body.name,
    }
 
-   courses.push(newItem);
+   courses.push(newCourse);
 
-   res.status(201).send(newItem).json({
+   res.status(201).send(newCourse).json({
       'message': "Course successfully created!",
    });
 });
 
 app.put('/api/v1.0/courses/:id', (req, res) => {
-   let found = courses.find((course) => course.id === parseInt(req.params.id));
-   if (!found) {
+   let foundCourse = courses.find((course) => course.id === parseInt(req.params.id));
+   if (!foundCourse) {
       res.status(404).send(NotFound());
 
    }
@@ -90,39 +93,42 @@ app.put('/api/v1.0/courses/:id', (req, res) => {
       return res.status(400).send(error.details[0].message);
 
    }
-   if (found) {
+   if (foundCourse) {
       let updatedCourse = {
-         id: found.id,
+         id: foundCourse.id,
          name: req.body.name,
       };
 
-      let targetIndex = courses.indexOf(found);
-
+      let targetIndex = courses.indexOf(foundCourse);
       courses.splice(targetIndex, 1, updatedCourse);
 
       res.status(201).send(updatedCourse);
 
    } else {
       res.status(404).json({
-         'message': 'Unable to course, because data to update does not match fields!'
+         'message': 'Unable to update course, because data does not match fields!'
       });
    }
 });
 
 app.delete('/api/v1.0/courses/:id', (req, res) => {
-   let found = courses.find((course) => course.id === parseInt(req.params.id));
+   let foundCourse = courses.find((course) => course.id === parseInt(req.params.id));
 
-   if (!found) {
+   if (!foundCourse) {
       res.status(404).send(NotFound());
 
    } else {
-      let targetIndex = courses.indexOf(found);
+      let targetIndex = courses.indexOf(foundCourse);
 
       courses.splice(targetIndex, 1);
 
-      res.send(found).status(204);
+      res.send(foundCourse).status(204);
    }
 });
+
+/************************* custom middlewares *************************/
+app.use(loggerMiddleware);
+app.use(authenticateMiddleware);
 
 /************************* functions *************************/
 function validateCourse(course) {
