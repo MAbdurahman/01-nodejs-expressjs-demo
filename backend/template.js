@@ -137,10 +137,10 @@ export default function Template() {
     <body>
     <div class="wrapper">
         <!-- begin of brand logo -->
-        <div class="brand">
+        <!--<div class="brand">
             <img src="https://res.cloudinary.com/mdbdrrhm/image/upload/v1699189765/gifs/3-gears-set_llqhcz.gif"
                  alt="three animated cogs" class="brand-gif"/>
-        </div>
+        </div>-->
         <section id="home">
             <div class="page-title">
                 <h1>BACKEND SERVER</h1>
