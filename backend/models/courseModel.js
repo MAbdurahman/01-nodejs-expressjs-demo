@@ -1,6 +1,7 @@
 /************************* imports *************************/
 import mongoose from 'mongoose';
 
+/************************* schema *************************/
 const courseModel = new mongoose.Schema({
       name: {
          type: String,

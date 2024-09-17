@@ -25,10 +25,11 @@ export const createCourse =  async (req, res, next) => {
 
 export const getAllCourses = async (req, res, next) => {
    try {
-      const courses = await Course.find();
-      if (!courses) {
-         return errorMessageHandler(res, 'Courses not found', 404);
-      }
+      const courses = await Course
+         .find({})
+         .sort({name: 1})
+         .select({name: 1, author: 1})
+
       res.status(200).send(courses);
 
    }
