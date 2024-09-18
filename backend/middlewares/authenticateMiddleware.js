@@ -1,6 +1,6 @@
 
 export const authenticateMiddleware = (req, res, next) => {
-   console.log('Authenticate Middleware...');
+   console.log('authenticateMiddleware...');
    next();
 
 }
